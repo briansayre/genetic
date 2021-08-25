@@ -2,9 +2,10 @@ class Person {
 
     constructor() {
         this.genes = [];
-        this.pos = createVector(windowWidth/2, windowHeight/2);
+        this.pos = createVector(WIDTH/2, HEIGHT/2);
         this.index = 0;
         this.angle = 0;
+        this.reachedGoal = false;
     }
     
     draw() {
@@ -13,10 +14,15 @@ class Person {
     }
     
     update() {
-        this.angle += atan(this.genes[this.index].x, this.genes[this.index].y);
-        this.pos.x -= SPEED * cos(this.angle);
-        this.pos.y -= SPEED * sin(this.angle);
+        if (dist(this.pos.x, this.pos.y, goal.x, goal.y) < 5) {
+            this.reachedGoal = true;
+        } else {
+            this.angle += atan(this.genes[this.index].x, this.genes[this.index].y);
+            this.pos.x -= SPEED * cos(this.angle);
+            this.pos.y -= SPEED * sin(this.angle);
+        }
         this.index++;
+      
     }
 
     generateGenes() {
@@ -27,7 +33,8 @@ class Person {
 
     calcFitness() {
         const distanceToGoal = dist(this.pos.x, this.pos.y, goal.x, goal.y);
-        let normalised = distanceToGoal / windowWidth;
+        console.log("Distance: "+distanceToGoal)
+        let normalised = distanceToGoal / WIDTH;
         return 1 - normalised;
     }
 
